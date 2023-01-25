@@ -1,8 +1,9 @@
-# To run postgre with environment variable, mount volume, and specify port to access
+### To run postgre with environment variable, mount volume, and specify port to access
 
-#Create local volume 
+# Create local volume 
 ```bash
-docker volume create --name dtc_postgres_volume_local -d local```
+docker volume create --name dtc_postgres_volume_local -d local
+```
 ```bash
 docker run -it \
     --name postgresql \
