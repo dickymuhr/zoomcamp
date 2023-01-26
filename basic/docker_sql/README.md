@@ -99,3 +99,13 @@ docker run -it \
     --table_name=yellow_taxi_trips \
     --url=${URL}
 ```
+
+# Docker compose
+To run multiple images that specified in docker-compose.yaml
+```bash
+docker-compose up -d # detach terminal
+```
+To turn it off and delete container
+```bash
+docker-compose down
+```
