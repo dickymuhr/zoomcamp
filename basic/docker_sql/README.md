@@ -106,10 +106,50 @@ docker run -it \
 ```
 
 # Docker compose
-To run multiple images that specified in docker-compose.yaml
+To run multiple images that specified in docker-compose.yaml. Also add command to pass CLI argument to ingest_data.py (it will be added to ENTRYPOINT)
+
+```bash
+services:
+  pgdatabase:
+    container_name: pg-database
+    image: postgres:13
+    environment:
+    - POSTGRES_USER=root
+    - POSTGRES_PASSWORD=root 
+    - POSTGREES_DB=ny_taxi
+    volumes:
+    - "./ny_taxi_postgres_data:/var/lib/postgresql/data:rw"
+    ports:
+    - "5432:5432"
+  pgadmin:
+    container_name: pgAdmin
+    image: dpage/pgadmin4
+    environment:
+    - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+    - PGADMIN_DEFAULT_PASSWORD=root
+    volumes:
+    - "./data_pgadmin:/var/lib/pgadmin"
+    ports:
+    - "8081:80"
+  ingestdata:
+    container_name: ingestdata
+    image: taxi_ingest:v002
+    command: 
+    - --user=root 
+    - --password=root 
+    - --host=pg-database 
+    - --port=5432 
+    - --db=ny_taxi 
+    - --table_name=yellow_taxi_trips 
+    - --url=https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz 
+    - --table_lookup_name=zones 
+    - --url_lookup=https://s3.amazonaws.com/nyc-tlc/misc/taxi+_zone_lookup.csv 
+```
+
 ```bash
 docker-compose up -d # detach terminal
 ```
+
 To turn it off and delete container
 ```bash
 docker-compose down

@@ -2,6 +2,7 @@
 # coding: utf-8
 
 import os
+import sys
 import pandas as pd
 from sqlalchemy import create_engine
 import argparse
@@ -15,6 +16,7 @@ def main(params):
     db = params.db
     table_name = params.table_name
     url = params.url
+
     table_lookup_name = params.table_lookup_name
     url_lookup = params.url_lookup
 
