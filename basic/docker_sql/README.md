@@ -78,6 +78,11 @@ python ingest_data.py \
   --url=${URL}
 ```
 
+To ensure data can be accessed before build image
+```bash
+sudo chmod -R 755 ny_taxi_postgres_data
+```
+
 Build the image
 ```bash
 docker build -t taxi_ingest:v001 .
