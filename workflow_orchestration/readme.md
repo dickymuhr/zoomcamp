@@ -19,4 +19,4 @@ python ingest_data.py \
 ```bash
 prefect orion start
 ```
-![My Image](zoomcamp/workflow_orchestration/asset/prefect ui.png)
+![My Image](https://github.com/dickymuhr/zoomcamp/blob/main/workflow_orchestration/asset/prefect%20ui.png?raw=true)
