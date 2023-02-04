@@ -9,8 +9,8 @@ def extract_from_gcs(color :str,year: int,month: int) -> Path:
     """Download trip data from GCS"""
     gcs_path = f"data/{color}/{color}_tripdata_{year}-{month:02}.parquet"
     gcs_block = GcsBucket.load("zoomcamp-gcs") # Name of block in orion, not bucket
-    gcs_block.get_directory(from_path=gcs_path, local_path=f"./data/")
-    return Path(f"./data/{gcs_path}")
+    gcs_block.get_directory(from_path=gcs_path, local_path=f"./")
+    return Path(f"./{gcs_path}")
 
 @task()
 def transform(path: Path) -> pd.DataFrame:
@@ -32,7 +32,7 @@ def write_bq(df: pd.DataFrame) -> None:
         project_id="axial-coyote-376114",
         credentials=gcp_credentials_block.get_credentials_from_service_account(),
         chunksize=500_000,
-        if_exists="append"
+        if_exists="replace"
     )
 
 @flow()
