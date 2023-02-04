@@ -3,11 +3,7 @@
 2. Run ingest_data.py
 
 ```bash
-URL="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz"
-
-python flows/gcp/etl_web_to_gcs.py \
-  --table_name=yellow_taxi_trips \
-  --url=${URL}
+python flows/gcp/etl_web_to_gcs.py 
 ```
 
 # User Interface
@@ -39,3 +35,24 @@ Successfully registered 6 blocks
 
 Then create GCS block with credentials using **Prefect Orion**
 See more documentation on : [https://prefecthq.github.io/prefect-gcp/cloud_storage/](https://prefecthq.github.io/prefect-gcp/cloud_storage/)
+
+# GCP Flows
+To read data from web and write to GCS
+And to read data from GCS to BigQuery
+
+# Deployment
+Deployment in Prefect is a server-side concept that encapsulates a flow, allowing it to be scheduled, and triggered via the API. [https://docs.prefect.io/concepts/deployments/#deployments-overview](https://docs.prefect.io/concepts/deployments/#deployments-overview)
+
+### Using CLI
+Build:
+```bash
+prefect deployment build flows/gcp/parameterized_flow.py:etl_parent_flow -n "Parameterized ETL"
+```
+Apply (trigger flow runs):
+```bash
+prefect deployment apply etl_parent_flow-deployment.yaml
+```
+Start Agent (executing runs):
+```bash
+prefect agent start  --work-queue "default"
+```

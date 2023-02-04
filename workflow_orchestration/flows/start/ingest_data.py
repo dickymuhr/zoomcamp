@@ -79,14 +79,8 @@ def log_subflow(table_name:str):
 
 
 @flow(name="Ingest Flow")
-def main_flow(params):
-    # user = params.user
-    # password = params.password
-    # host = params.host
-    # port = params.port
-    # db = params.db
-    table_name = params.table_name
-    url = params.url
+def main_flow(table_name, url):
+    
 
     log_subflow(table_name)
     raw_data = extract_data(url)
@@ -94,19 +88,6 @@ def main_flow(params):
     ingest_data(table_name, data)
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Ingest CSV data to Postgres')
-
-    # User, pass, host, port, db name, table name
-    # url of the csv
-
-    ## Already Defined in SQLAlchemy Blocks
-    # parser.add_argument('--user', help="username for pg")
-    # parser.add_argument('--password', help="pass for pg")
-    # parser.add_argument('--host', help="host for pg")
-    # parser.add_argument('--port', help="port for pg")
-    # parser.add_argument('--db', help="db name for pg")
-    parser.add_argument('--table_name', help="name of the table where will write the result to")
-    parser.add_argument('--url', help="url to the csv file")
-
-    args = parser.parse_args()
-    main_flow(args)
+    table_name = "yellow_taxi_trips"
+    url = "https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz"
+    main_flow(table_name,url)
