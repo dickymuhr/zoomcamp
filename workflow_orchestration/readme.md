@@ -100,3 +100,11 @@ prefect deployment run etl-parent-flow/docker-flow -p "months=[1,2]"
 ```bash
 prefect deployment run "To BigQuery Parent/ETLtoBQ" --params='{"year":2019,"months":[2,3],"color":"yellow"}'
 ```
+
+### Deploy using Github Block
+```bash
+prefect deployment build
+```
+
+### Another Storage
+[https://docs.prefect.io/concepts/storage/](https://docs.prefect.io/concepts/storage/)
