@@ -21,26 +21,23 @@ def clean(df:pd.DataFrame) -> pd.DataFrame:
     print(f"rows: {len(df)}")
     return df
 
-@task()
+@task(log_prints=True)
 def write_local(df:pd.DataFrame, color:str, dataset_file:str) -> Path:
     """Write DataFrame out as parquet file"""
     path = Path(f"data/{color}/{dataset_file}.parquet")
     df.to_parquet(path, compression="gzip")
     return path
 
-@task()
+@task(log_prints=True)
 def write_gcs(path: Path) -> None:
     """Upload local parquet file to GCS"""
     gcs_block = GcsBucket.load("zoomcamp-gcs") # Name of block in orion, not bucket
-    gcs_block.upload_from_path(from_path = path, to_path = path)
+    gcs_block.upload_from_path(from_path = path, to_path = path, timeout=180)
     return 
 
 @flow(name="Ingest Flow")
-def etl_web_to_gcs() -> None:
+def etl_web_to_gcs(year,month,color) -> None:
     """The main ETL function"""
-    color = "yellow"
-    year = 2021
-    month = 1
     dataset_file = f"{color}_tripdata_{year}-{month:02}"
     dataset_url = f"https://github.com/DataTalksClub/nyc-tlc-data/releases/download/{color}/{dataset_file}.csv.gz"
 
@@ -49,5 +46,17 @@ def etl_web_to_gcs() -> None:
     path = write_local(df_clean, color, dataset_file)
     write_gcs(path)
 
+@flow(name="Parent Ingest Flow")
+def etl_web_to_gcs_parent(
+    year: int = 2021,
+    months: list[int] = [1,2],
+    color: str = "yellow"
+):
+    for month in months:
+        etl_web_to_gcs(year,month,color)
+
 if __name__ == '__main__':
-    etl_web_to_gcs()
+    color = "yellow"
+    months = [2,3]
+    year = 2019
+    etl_web_to_gcs_parent(year,months,color)

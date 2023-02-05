@@ -97,3 +97,6 @@ Run from CLI
 ```bash
 prefect deployment run etl-parent-flow/docker-flow -p "months=[1,2]"
 ```
+```bash
+prefect deployment run "To BigQuery Parent/ETLtoBQ" --params='{"year":2019,"months":[2,3],"color":"yellow"}'
+```

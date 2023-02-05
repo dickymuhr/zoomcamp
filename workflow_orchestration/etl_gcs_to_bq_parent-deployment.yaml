@@ -1,0 +1,52 @@
+###
+### A complete description of a Prefect Deployment for flow 'To BigQuery Parent'
+###
+name: ETLtoBQ
+description: null
+version: c60e7578ae396270ecf8d60e6a5ff44c
+# The work queue that will handle this deployment's runs
+work_queue_name: default
+tags: []
+parameters: {}
+schedule: null
+infra_overrides: {}
+
+###
+### DO NOT EDIT BELOW THIS LINE
+###
+flow_name: To BigQuery Parent
+manifest_path: null
+infrastructure:
+  type: process
+  env: {}
+  labels: {}
+  name: null
+  command: null
+  stream_output: true
+  working_dir: null
+  _block_document_id: a6b450e2-109b-45d9-8460-a755f2b31574
+  _block_document_name: anonymous-1aefc246-4af2-488a-ae68-696d87e234a9
+  _is_anonymous: true
+  block_type_slug: process
+  _block_type_slug: process
+storage: null
+path: /home/diccode/zoomcamp/workflow_orchestration
+entrypoint: flows/gcp/etl_gcs_to_bq.py:etl_gcs_to_bq_parent
+parameter_openapi_schema:
+  title: Parameters
+  type: object
+  properties:
+    year:
+      title: year
+      position: 0
+    months:
+      title: months
+      position: 1
+    color:
+      title: color
+      position: 2
+  required:
+  - year
+  - months
+  - color
+  definitions: null
