@@ -43,10 +43,10 @@ And to read data from GCS to BigQuery
 # Deployment
 Deployment in Prefect is a server-side concept that encapsulates a flow, allowing it to be scheduled, and triggered via the API. [https://docs.prefect.io/concepts/deployments/#deployments-overview](https://docs.prefect.io/concepts/deployments/#deployments-overview)
 
-### Using CLI
+## Using CLI
 Build:
 ```bash
-prefect deployment build flows/gcp/parameterized_flow.py:etl_parent_flow -n "Parameterized ETL"
+prefect deployment build flows/deployment/parameterized_flow.py:etl_parent_flow -n "Parameterized ETL"
 ```
 Apply (trigger flow runs):
 ```bash
@@ -55,4 +55,41 @@ prefect deployment apply etl_parent_flow-deployment.yaml
 Start Agent (executing runs):
 ```bash
 prefect agent start  --work-queue "default"
+```
+Build and apply
+```bash
+prefect deployment build flows/deployment/parameterized_flow.py:etl_parent_flow -n etl2 --cron "0 0 * * *" -a
+```
+Help comannd
+```bash
+prefect deployment build --help
+```
+
+### Running on Docker Container
+We'll build and image and upload it to dockerhub to save or flow code
+```bash
+docker image build -t dickymuhr/prefect:zoom .
+```
+```bash
+docker image push dickymuhr/prefect:zoom
+```
+
+## Using Python
+
+```bash
+python flows/deployment/docker_deploy.py
+```
+
+Set updated config
+```bash
+prefect config set PREFECT_API_URL="http://127.0.0.1:4200/api"
+```
+
+```bash
+prefect agent start  -q default
+```
+
+Run from CLI
+```bash
+prefect deployment run etl-parent-flow/docker-flow -p "months=[1,2]"
 ```
