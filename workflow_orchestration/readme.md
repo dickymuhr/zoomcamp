@@ -44,19 +44,22 @@ And to read data from GCS to BigQuery
 Deployment in Prefect is a server-side concept that encapsulates a flow, allowing it to be scheduled, and triggered via the API. [https://docs.prefect.io/concepts/deployments/#deployments-overview](https://docs.prefect.io/concepts/deployments/#deployments-overview)
 
 ## Using CLI
-Build:
+Build, build the metadata of the flow
 ```bash
 prefect deployment build flows/deployment/parameterized_flow.py:etl_parent_flow -n "Parameterized ETL"
 ```
-Apply (trigger flow runs):
+Apply (trigger flow runs), send metadata to prefect API:
 ```bash
 prefect deployment apply etl_parent_flow-deployment.yaml
 ```
-Start Agent (executing runs):
+Start Agent (executing runs), is a process running on executing env, *pulling from a work queue*:
 ```bash
 prefect agent start  --work-queue "default"
 ```
-Build and apply
+-> And run the flow through the Orion UI
+
+
+Build and apply together, with scheduling
 ```bash
 prefect deployment build flows/deployment/parameterized_flow.py:etl_parent_flow -n etl2 --cron "0 0 * * *" -a
 ```
@@ -73,6 +76,7 @@ docker image build -t dickymuhr/prefect:zoom .
 ```bash
 docker image push dickymuhr/prefect:zoom
 ```
+Dont forget to add Docker blocks in orion
 
 ## Using Python
 
