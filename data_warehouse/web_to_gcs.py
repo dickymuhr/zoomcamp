@@ -11,6 +11,8 @@ Pre-reqs:
 2. Set GOOGLE_APPLICATION_CREDENTIALS to your project/service-account key
 3. Set GCP_GCS_BUCKET as your bucket or change default value of BUCKET
 """
+
+# export GOOGLE_APPLICATION_CREDENTIALS="credential/axial-coyote-376114-4c1af9c983eb.json"
 # https://github.com/DataTalksClub/nyc-tlc-data/releases/download/fhv/fhv_tripdata_2019-01.csv.gz
 
 init_url = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/fhv/'
@@ -41,26 +43,22 @@ def web_to_gcs(year, service):
         month = month[-2:]
 
         # csv file_name 
-        file_name = service + '_tripdata_' + year + '-' + month + '.csv'
+        file_name = service + '_tripdata_' + year + '-' + month + '.csv.gz'
 
         # download it using requests via a pandas df
         request_url = init_url + file_name
-        r = requests.get(request_url)
-        pd.DataFrame(io.StringIO(r.text)).to_csv(file_name)
-        print(f"Local: {file_name}")
+        print(f"Downloading {request_url}")
+        df = pd.read_csv(request_url, compression='gzip')
 
-        # read it back into a parquet file
-        df = pd.read_csv(file_name)
-        file_name = file_name.replace('.csv', '.parquet')
-        df.to_parquet(file_name, engine='pyarrow')
-        print(f"Parquet: {file_name}")
+        df.to_csv(f"data/{service}/{file_name}", compression='gzip',index=False)
+        print(f"Local: {file_name}")
 
         # upload it to gcs 
         # spesifik folder di bucketnya
-        upload_to_gcs(BUCKET, f"data/{service}/{file_name}", file_name)
-        print(f"GCS: {service}/{file_name}")
+        print(f"Uploading to gs://dee_zoomcamp_prefect/data/{service}/{file_name}")
+        upload_to_gcs(BUCKET, f"data/{service}/{file_name}", f"data/{service}/{file_name}")
+        
 
 
-web_to_gcs('2019', 'fhv')
-# web_to_gcs('2019', 'yellow')
-# web_to_gcs('2020', 'yellow')
+web_to_gcs(year='2019',service= 'fhv')
+
