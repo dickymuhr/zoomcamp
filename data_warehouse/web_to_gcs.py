@@ -4,6 +4,10 @@ import requests
 import pandas as pd
 import pyarrow
 from google.cloud import storage
+TIMEOUT_SEC = 3600 # default timeount in seconds
+import socket
+socket.setdefaulttimeout(TIMEOUT_SEC)
+import pandas as pd
 
 """
 Pre-reqs: 
@@ -11,11 +15,14 @@ Pre-reqs:
 2. Set GOOGLE_APPLICATION_CREDENTIALS to your project/service-account key
 3. Set GCP_GCS_BUCKET as your bucket or change default value of BUCKET
 """
-
+### PRO TIPS: DO THIS IN GOOGLE CLOUD SHELL
 # export GOOGLE_APPLICATION_CREDENTIALS="credential/axial-coyote-376114-4c1af9c983eb.json"
 # https://github.com/DataTalksClub/nyc-tlc-data/releases/download/fhv/fhv_tripdata_2019-01.csv.gz
 
-init_url = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/fhv/'
+
+# https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2019-01.csv.gz
+# init_url = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/fhv/'
+init_url = 'https://github.com/DataTalksClub/nyc-tlc-data/releases/download/'
 # switch out the bucketname
 BUCKET = os.environ.get("GCP_GCS_BUCKET", "de_zoomcamp_prefect") # nama bucket cloud storage
 
@@ -46,11 +53,13 @@ def web_to_gcs(year, service):
         file_name = service + '_tripdata_' + year + '-' + month + '.csv.gz'
 
         # download it using requests via a pandas df
-        request_url = init_url + file_name
+        request_url = init_url + service + '/' + file_name
         print(f"Downloading {request_url}")
         df = pd.read_csv(request_url, compression='gzip')
 
-        df.to_csv(f"data/{service}/{file_name}", compression='gzip',index=False)
+        # df.to_csv(f"data/{service}/{file_name}", compression='gzip',index=False)
+        file_name = file_name.replace(".csv.gz",".parquet")
+        df.to_parquet(f"data/{service}/{file_name}",index=False)
         print(f"Local: {file_name}")
 
         # upload it to gcs 
@@ -61,4 +70,8 @@ def web_to_gcs(year, service):
 
 
 web_to_gcs(year='2019',service= 'fhv')
+web_to_gcs(year='2019',service= 'yellow')
+web_to_gcs(year='2020',service= 'yellow')
+web_to_gcs(year='2019',service= 'green')
+web_to_gcs(year='2020',service= 'green')
 
