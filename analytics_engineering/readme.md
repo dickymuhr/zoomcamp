@@ -26,3 +26,18 @@ Transform the data where is it in the data warehouse. Faster and more flexible d
 - Stage Area: Contains raw data. Not meant to exposed to public. Like warehouse of foodstuff in restaurant
 - Processing Area: Kitchen in a restaurant. Take raws data and make model. Limited access to the chef.
 - Presentation Area: Dining hall. Exposure to business stakeholder. 
+
+# dbt (Data Build Tool)
+dbt is a transformation tool that allow anyone that knows SQL to deploy analytics code following software engineering best practices like modularity, portability, CI/CD, and documentation.
+
+### dbt Core
+Open-source project that allows the data transformation.
+- Builds and runs a dbt project (.sql and .yml files)
+- Includes SQL compilation logic, macros, and database adapters
+- Include CLI interface
+### dbt Cloud
+SaaS application to develop and manage dbt projects.
+- Web-based IDE to develop, run and test a dbt project
+- Jobs orchestration
+- Logging & Alerting
+- Integrated documentation
