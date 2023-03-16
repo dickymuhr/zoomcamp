@@ -42,6 +42,12 @@ def upload_to_gcs(bucket, object_name, local_file):
     blob.upload_from_filename(local_file)
 
 
+def castInteger(df,columns):
+    for col in columns:
+        df[col].astype('Int64')
+    return df
+
+
 def web_to_gcs(year, service):
     for i in range(12):
         
@@ -56,6 +62,10 @@ def web_to_gcs(year, service):
         request_url = init_url + service + '/' + file_name
         print(f"Downloading {request_url}")
         df = pd.read_csv(request_url, compression='gzip')
+
+        # Cast to integer
+        columns = ['passenger_count','payment_type','RatecodeID','VendorID','trip_type']
+        df = castInteger(df, columns)
 
         # df.to_csv(f"data/{service}/{file_name}", compression='gzip',index=False)
         file_name = file_name.replace(".csv.gz",".parquet")
