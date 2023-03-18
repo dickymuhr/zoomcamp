@@ -1,4 +1,2 @@
 *.json
 *.csv.gz
-*checkpoint*
-zones
