@@ -16,7 +16,7 @@ docker-compose build
 ```
 1. Initialize 
 ```bash
-docker-compose up airflow-init
+docker-compose up -d airflow-init
 ``` 
 
 2. Run all Airflow container
