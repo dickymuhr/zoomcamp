@@ -1,5 +1,3 @@
 *parquet
 *.csv.gz
 __pycache__/
-.env
-*.log
